@@ -1,0 +1,20 @@
+{
+  "name": "01-data-storage",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Node.js 인프런 강의 기초 실습 - 데이터 저장",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js",
+    "dev": "nodemon --exec node src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
