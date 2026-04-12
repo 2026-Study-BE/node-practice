@@ -13,27 +13,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // 등록 페이지
-app.get("/topic/new", (req, res) => {
-  res.render("new");
+app.get("/topic/new", async (req, res) => {
+  const files = await readdir("data");
+  res.render("new", { topics: files });
 });
-// 목록 페이지
-app.get("/topic", async (req, res) => {
+// 조회 페이지 (상세, 목록)
+app.get(["/topic", "/topic/:id"], async (req, res) => {
   try {
     const files = await readdir("data");
-    res.render("view", { topics: files });
-  } catch (err) {
-    console.error("err: ", err);
-    res.status(500).send("Internal Server Error");
-  }
-});
-// 상세 페이지
-app.get("/topic/:id", async (req, res) => {
-  var id = req.params.id;
 
-  try {
-    const files = await readdir("data");
-    const data = await readFile("data/" + id, "utf8");
-    res.render("view", { topics: files, title: id, description: data });
+    var id = req.params.id;
+
+    if (id) {
+      // 상세 페이지
+      const data = await readFile("data/" + id, "utf8");
+      res.render("view", { topics: files, title: id, description: data });
+    } else {
+      // 목록 페이지
+      res.render("view", { topics: files });
+    }
   } catch (err) {
     console.error("err: ", err);
     res.status(500).send("Internal Server Error");
@@ -46,7 +44,7 @@ app.post("/topic", async (req, res) => {
 
   try {
     await writeFile("data/" + title, description);
-    res.send("Success!");
+    res.redirect("/topic/" + title);
   } catch (err) {
     console.error("err: ", err);
     res.status(500).send("Internal Server Error");
